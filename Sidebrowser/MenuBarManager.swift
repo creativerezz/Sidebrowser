@@ -14,13 +14,30 @@ class MenuBarManager: NSObject, ObservableObject {
     @MainActor private var statusItem: NSStatusItem?
     private var appState: AppState
     @MainActor private var popoverManager: PopoverManager?
+    @MainActor private var keyboardShortcutManager: KeyboardShortcutManager?
 
     @MainActor
     init(appState: AppState) {
         self.appState = appState
         super.init()
         self.popoverManager = PopoverManager(appState: appState)
+        self.keyboardShortcutManager = KeyboardShortcutManager()
         setupMenuBar()
+        setupGlobalKeyboardShortcut()
+    }
+
+    @MainActor
+    private func setupGlobalKeyboardShortcut() {
+        keyboardShortcutManager?.registerGlobalShortcut { [weak self] in
+            guard let self = self,
+                  let button = self.statusItem?.button,
+                  let popoverManager = self.popoverManager else {
+                return
+            }
+
+            popoverManager.toggle(relativeTo: button)
+            self.appState.isVisible = popoverManager.isShown
+        }
     }
     
     @MainActor

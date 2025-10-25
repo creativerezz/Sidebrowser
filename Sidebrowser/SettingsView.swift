@@ -64,6 +64,16 @@ struct GeneralSettingsView: View {
                     defaultURL = appState.currentURL.absoluteString
                 }
                 .buttonStyle(.link)
+
+                LabeledContent("Search Engine") {
+                    Picker("", selection: $appState.searchEngine) {
+                        ForEach(SearchEngine.allCases, id: \.self) { engine in
+                            Text(engine.rawValue).tag(engine)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .frame(width: 150)
+                }
             } header: {
                 Text("Startup")
             }
@@ -217,23 +227,29 @@ struct KeyboardShortcutsView: View {
     var body: some View {
         Form {
             Section {
+                ShortcutRow(key: "⌥⌘ Space", description: "Show/Hide Browser (Global)", available: true)
                 ShortcutRow(key: "⌘ L", description: "Enter URL from menu bar")
                 ShortcutRow(key: "⌘ T", description: "Toggle 'Always on Top'")
                 ShortcutRow(key: "⌘ ,", description: "Open Settings")
                 ShortcutRow(key: "⌘ Q", description: "Quit Sidebrowser")
             } header: {
-                Text("Menu Bar Shortcuts")
+                Text("Global & Menu Bar Shortcuts")
+            } footer: {
+                Text("Global shortcut requires Accessibility permissions")
+                    .font(.caption)
             }
 
             Section {
-                ShortcutRow(key: "⌘ [", description: "Go Back", available: false)
-                ShortcutRow(key: "⌘ ]", description: "Go Forward", available: false)
-                ShortcutRow(key: "⌘ R", description: "Reload Page", available: false)
+                ShortcutRow(key: "⌘ [", description: "Go Back")
+                ShortcutRow(key: "⌘ ]", description: "Go Forward")
+                ShortcutRow(key: "⌘ R", description: "Reload Page")
+                ShortcutRow(key: "⌘ D", description: "Toggle Bookmark (Star)")
+                ShortcutRow(key: "⌘ F", description: "Find in Page", available: false)
                 ShortcutRow(key: "⌘ W", description: "Close/Hide Window", available: false)
             } header: {
                 Text("Browser Shortcuts")
             } footer: {
-                Text("Additional browser shortcuts coming soon")
+                Text("Some browser shortcuts coming soon")
                     .font(.caption)
             }
         }
