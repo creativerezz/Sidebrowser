@@ -346,7 +346,7 @@ struct AboutView: View {
             Section {
                 HStack {
                     Spacer()
-                    Text("Made with ❤️ using SwiftUI")
+                    Text("Made with ❤️ by Creativerez")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()
