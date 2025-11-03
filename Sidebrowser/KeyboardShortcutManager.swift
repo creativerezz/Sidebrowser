@@ -20,10 +20,20 @@ class KeyboardShortcutManager {
 
         // Request accessibility permissions
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
-        let trusted = AXIsProcessTrustedWithOptions(options as CFDictionary)
+        var trusted = AXIsProcessTrustedWithOptions(options as CFDictionary)
 
-        guard trusted else {
-            print("Accessibility permissions not granted")
+        // Wait a bit for permissions if not initially granted
+        var attempts = 0
+        while !trusted && attempts < 5 {
+            sleep(1)
+            trusted = AXIsProcessTrustedWithOptions(nil)
+            attempts += 1
+            print("Checking accessibility permissions... attempt \(attempts)")
+        }
+
+        if !trusted {
+            print("⚠️ Accessibility permissions not granted. Global shortcut won't work.")
+            print("Please grant accessibility permissions to the app in System Preferences > Security & Privacy > Privacy")
             return
         }
 
